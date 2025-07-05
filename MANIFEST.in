@@ -1,0 +1,9 @@
+include README.md
+include LICENSE
+include requirements.txt
+include CONTRIBUTING.md
+recursive-include docs *
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .DS_Store 
