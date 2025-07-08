@@ -38,10 +38,10 @@ def main():
             final_score, score_breakdown, pages_scanned = analyze_full_site(site)
 
             # Display results
-            print(f"✅ Analysis complete!")
+            print("✅ Analysis complete!")
             print(f"📈 Final Score: {final_score}")
             print(f"📄 Pages Scanned: {pages_scanned}")
-            print(f"📊 Score Breakdown:")
+            print("📊 Score Breakdown:")
 
             for element, percentage in score_breakdown.items():
                 print(f"   • {element}: {percentage}%")

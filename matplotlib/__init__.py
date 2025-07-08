@@ -1,1 +1,1 @@
-from . import pyplot
+from . import pyplot  # noqa: F401
