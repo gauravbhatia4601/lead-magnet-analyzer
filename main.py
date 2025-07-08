@@ -3,6 +3,7 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 import time
+from typing import Optional
 
 def extract_links_with_playwright(start_url, max_pages=10):
     visited = set()
@@ -114,31 +115,40 @@ def analyze_full_site(url):
     normalized = {k: round((v / num_pages) * 100, 2) for k, v in combined_scores.items()}
     return total_score, normalized, num_pages
 
-def plot_results(scores, total, link_count, url):
+def plot_results(
+    scores: dict,
+    total: int,
+    link_count: int,
+    url: str,
+    *,
+    output_file: Optional[str] = None,
+    show: bool = True,
+) -> None:
+    """Generate and optionally save a bar chart of the analysis results."""
+
     if not scores:
         print("❌ No pages successfully analyzed.")
         return
 
     plt.figure(figsize=(10, 6))
-    plt.barh(list(scores.keys()), list(scores.values()), color='mediumseagreen')
+    plt.barh(list(scores.keys()), list(scores.values()), color="mediumseagreen")
     plt.xlabel("Presence across pages (%)")
-    plt.title(f"Lead Magnet Score: {total} | Pages Scanned: {link_count}\nAnalyzed URL: {url}")
-    plt.grid(axis='x', linestyle='--', alpha=0.5)
+    plt.title(
+        f"Lead Magnet Score: {total} | Pages Scanned: {link_count}\nAnalyzed URL: {url}"
+    )
+    plt.grid(axis="x", linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.show()
+    if output_file:
+        plt.savefig(output_file)
+    if show:
+        plt.show()
+    plt.close()
 
-# Run the upgraded Playwright-powered analyzer
-target_site = "https://www.technioz.com/"
-final_score, score_breakdown, pages_scanned = analyze_full_site(target_site)
-plot_results(score_breakdown, final_score, pages_scanned, target_site)
-print(f"Final Score: {final_score}")
-print(f"Score Breakdown: {score_breakdown}")
-print(f"Analyzed URL: {target_site}")
-# This code uses Playwright to crawl and analyze a website for lead magnet elements.
-# It extracts links, analyzes each page for specific lead magnet features,
-# and visualizes the results using matplotlib.
-# Ensure you have the required libraries installed:
-# pip install playwright beautifulsoup4 matplotlib
-# Note: You need to run `playwright install` in your terminal to set up the browsers.
-# Make sure to run this script in an environment where Playwright can launch a browser.
-# This code uses Playwright to crawl and analyze a website for lead magnet elements.
+if __name__ == "__main__":
+    # Example usage when running this module directly
+    target_site = "https://www.technioz.com/"
+    final_score, score_breakdown, pages_scanned = analyze_full_site(target_site)
+    plot_results(score_breakdown, final_score, pages_scanned, target_site)
+    print(f"Final Score: {final_score}")
+    print(f"Score Breakdown: {score_breakdown}")
+    print(f"Analyzed URL: {target_site}")

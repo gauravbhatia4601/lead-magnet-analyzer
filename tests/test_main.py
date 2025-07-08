@@ -4,8 +4,42 @@ Tests for the Lead Magnet Analyzer main module.
 
 import pytest
 from unittest.mock import Mock, patch
+from html.parser import HTMLParser
 import sys
 import os
+
+
+class DummyTag(dict):
+    """Simplified tag representation for testing."""
+
+    def get(self, key, default=None):
+        return self[key] if key in self else default
+
+
+class DummySoup(HTMLParser):
+    """Very small HTML parser used to avoid external dependencies."""
+
+    def __init__(self, html: str, parser: str = "html.parser"):
+        super().__init__()
+        self.tags = []
+        self.text_parts = []
+        self.feed(html)
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append((tag, dict(attrs)))
+
+    def handle_data(self, data):
+        self.text_parts.append(data)
+
+    def find_all(self, tag, href=False):
+        results = []
+        for t, attrs in self.tags:
+            if t == tag and (not href or "href" in attrs):
+                results.append(DummyTag(attrs))
+        return results
+
+    def get_text(self, separator=" "):
+        return separator.join(self.text_parts)
 
 # Add the parent directory to the path so we can import main
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,6 +51,7 @@ class TestAnalyzePageWithPlaywright:
     """Test cases for the analyze_page_with_playwright function."""
 
     @patch('main.sync_playwright')
+    @patch('main.BeautifulSoup', new=DummySoup)
     def test_analyze_page_with_email_capture(self, mock_playwright):
         """Test analysis of a page with email capture elements."""
         # Mock the Playwright context
@@ -47,6 +82,7 @@ class TestAnalyzePageWithPlaywright:
         assert "Email Capture" in results
 
     @patch('main.sync_playwright')
+    @patch('main.BeautifulSoup', new=DummySoup)
     def test_analyze_page_with_value_offers(self, mock_playwright):
         """Test analysis of a page with value offers."""
         # Mock the Playwright context
@@ -76,6 +112,7 @@ class TestAnalyzePageWithPlaywright:
         assert "Value Offers" in results
 
     @patch('main.sync_playwright')
+    @patch('main.BeautifulSoup', new=DummySoup)
     def test_analyze_page_with_ctas(self, mock_playwright):
         """Test analysis of a page with call-to-action elements."""
         # Mock the Playwright context
@@ -106,6 +143,7 @@ class TestAnalyzePageWithPlaywright:
         assert "CTAs" in results
 
     @patch('main.sync_playwright')
+    @patch('main.BeautifulSoup', new=DummySoup)
     def test_analyze_page_with_trust_signals(self, mock_playwright):
         """Test analysis of a page with trust signals."""
         # Mock the Playwright context
@@ -176,6 +214,6 @@ class TestPlotResults:
         plot_results(scores, 0, 0, "https://example.com")
         # No assertion needed - just checking it doesn't crash
 
-
 if __name__ == "__main__":
-    pytest.main([__file__]) 
+    pytest.main([__file__])
+
