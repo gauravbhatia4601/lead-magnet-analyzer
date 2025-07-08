@@ -2,3 +2,5 @@ requests
 beautifulsoup4
 matplotlib 
 playwright
+fastapi
+uvicorn

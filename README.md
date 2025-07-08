@@ -71,6 +71,18 @@ python main.py
 
 The script will analyze the predefined target site and display results.
 
+### API Usage
+
+An authenticated FastAPI endpoint is provided for programmatic access.
+
+```bash
+curl -X POST "http://localhost:8000/analyze?url=https://example.com" \
+     -H "X-API-KEY: secret"
+```
+
+The response contains the score breakdown in JSON and the name of a chart file
+which can be downloaded from `/files/<result_file>` using the same API key.
+
 ## 📈 Output
 
 The analyzer provides:
