@@ -1,8 +1,10 @@
 from html.parser import HTMLParser
 
+
 class Tag(dict):
     def get(self, key, default=None):
         return self[key] if key in self else default
+
 
 class BeautifulSoup(HTMLParser):
     def __init__(self, html, parser="html.parser"):

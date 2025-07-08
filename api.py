@@ -23,7 +23,9 @@ def analyze(url: str, key: str = Depends(verify_key)):
     os.makedirs("results", exist_ok=True)
     file_name = f"analysis_{int(time.time())}.png"
     file_path = os.path.join("results", file_name)
-    plot_results(breakdown, total_score, pages_scanned, url, output_file=file_path, show=False)
+    plot_results(
+        breakdown, total_score, pages_scanned, url, output_file=file_path, show=False
+    )
     return {
         "total_score": total_score,
         "pages_scanned": pages_scanned,

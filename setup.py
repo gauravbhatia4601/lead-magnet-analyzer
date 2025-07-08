@@ -4,7 +4,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 with open("requirements.txt", "r", encoding="utf-8") as fh:
-    requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+    requirements = [
+        line.strip() for line in fh if line.strip() and not line.startswith("#")
+    ]
 
 setup(
     name="lead-magnet-analyzer",
@@ -54,4 +56,4 @@ setup(
         "Source": "https://github.com/yourusername/lead-magnet-analyzer",
         "Documentation": "https://github.com/yourusername/lead-magnet-analyzer#readme",
     },
-) 
+)

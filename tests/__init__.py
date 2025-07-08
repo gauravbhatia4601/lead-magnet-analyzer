@@ -1,1 +1,1 @@
-# Tests package for Lead Magnet Analyzer 
+# Tests package for Lead Magnet Analyzer
