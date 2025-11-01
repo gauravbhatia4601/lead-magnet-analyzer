@@ -157,4 +157,8 @@ Thumbs.db
 *.svg
 output/
 results/
-logs/ 
+logs/
+*.db
+magentix.db
+.cursor/
+.cursorrules

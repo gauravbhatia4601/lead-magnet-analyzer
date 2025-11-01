@@ -1,0 +1,3 @@
+"""
+Magentix API Package
+"""
