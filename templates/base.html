@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lead Magnet Analyzer - Discover What Converts Visitors{% endblock %}</title>
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="{% block og_title %}Lead Magnet Analyzer{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Analyze any website's lead magnets and conversion tactics in 30 seconds{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.url.scheme }}://{{ request.url.netloc }}/static/og-image.png{% endblock %}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Lead Magnet Analyzer{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Analyze any website's lead magnets in 30 seconds{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.url.scheme }}://{{ request.url.netloc }}/static/og-image.png{% endblock %}">
+
+    <!-- Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto;
+        }
+        .score-excellent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .score-good { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .score-average { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .score-poor { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+
+        .share-button {
+            transition: transform 0.2s;
+        }
+        .share-button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">
+                    🔍 Lead Magnet Analyzer
+                </a>
+                <nav class="space-x-4">
+                    <a href="/#how-it-works" class="hover:underline">How It Works</a>
+                    <a href="/#pricing" class="hover:underline">Pricing</a>
+                    <a href="/dashboard" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        Dashboard
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Lead Magnet Analyzer</h3>
+                    <p class="text-gray-400">
+                        Discover what's converting your competitors' visitors.
+                        Analyze any website in 30 seconds.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/#features" class="hover:text-white">Features</a></li>
+                        <li><a href="/#pricing" class="hover:text-white">Pricing</a></li>
+                        <li><a href="/api/docs" class="hover:text-white">API Docs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/about" class="hover:text-white">About</a></li>
+                        <li><a href="/privacy" class="hover:text-white">Privacy</a></li>
+                        <li><a href="/terms" class="hover:text-white">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Lead Magnet Analyzer. Made with ❤️ for digital marketers.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

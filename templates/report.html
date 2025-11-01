@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}{{ analysis.url }} - Lead Magnet Score: {{ analysis.score }}/100{% endblock %}
+
+{% block og_title %}{{ analysis.url }} scored {{ analysis.score }}/100 for lead magnets{% endblock %}
+{% block og_description %}Email capture: {% if analysis.breakdown['Email Capture'] > 0 %}✓{% else %}✗{% endif %} | Value offers: {% if analysis.breakdown['Value Offers'] > 0 %}✓{% else %}✗{% endif %} | CTAs: {% if analysis.breakdown['CTAs'] > 0 %}✓{% else %}✗{% endif %} | See full analysis →{% endblock %}
+{% block og_image %}{{ request.url.scheme }}://{{ request.url.netloc }}/files/{{ analysis.result_file }}{% endblock %}
+
+{% block twitter_title %}{{ analysis.url }} - Lead Magnet Score: {{ analysis.score }}/100{% endblock %}
+{% block twitter_description %}Just analyzed this site's lead magnets. See what's converting their visitors! 🔍{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Main Report Card -->
+    <div class="max-w-4xl mx-auto">
+        <!-- Score Header -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Lead Magnet Analysis</h1>
+                <a href="{{ analysis.url }}" target="_blank" class="text-lg text-blue-600 hover:underline break-all">
+                    {{ analysis.url }}
+                </a>
+                <p class="text-gray-500 mt-2">Analyzed {{ analysis.pages_scanned }} pages</p>
+            </div>
+
+            <!-- Score Circle -->
+            <div class="mb-8">
+                {% if analysis.score >= 7 %}
+                    <div class="score-circle score-excellent">{{ analysis.score }}/9</div>
+                    <p class="text-center mt-4 text-xl font-semibold text-green-600">Excellent Lead Magnet Strategy! 🎉</p>
+                {% elif analysis.score >= 5 %}
+                    <div class="score-circle score-good">{{ analysis.score }}/9</div>
+                    <p class="text-center mt-4 text-xl font-semibold text-blue-600">Good Lead Magnet Presence 👍</p>
+                {% elif analysis.score >= 3 %}
+                    <div class="score-circle score-average">{{ analysis.score }}/9</div>
+                    <p class="text-center mt-4 text-xl font-semibold text-orange-600">Room for Improvement 📈</p>
+                {% else %}
+                    <div class="score-circle score-poor">{{ analysis.score }}/9</div>
+                    <p class="text-center mt-4 text-xl font-semibold text-red-600">Needs Attention ⚠️</p>
+                {% endif %}
+            </div>
+
+            <!-- Breakdown Chart -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Lead Magnet Elements Detected</h2>
+                <div class="space-y-4">
+                    {% for element, percentage in analysis.breakdown.items() %}
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-semibold text-gray-700">{{ element }}</span>
+                            <span class="font-bold text-gray-900">{{ percentage }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="h-3 rounded-full transition-all duration-500
+                                {% if percentage >= 75 %}bg-green-500
+                                {% elif percentage >= 50 %}bg-blue-500
+                                {% elif percentage >= 25 %}bg-orange-500
+                                {% else %}bg-red-500{% endif %}"
+                                 style="width: {{ percentage }}%">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Result Image -->
+            {% if analysis.result_file %}
+            <div class="mb-8">
+                <img src="/files/{{ analysis.result_file }}" alt="Analysis Chart" class="w-full rounded-lg shadow-md">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Viral CTA Card -->
+        <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-xl p-8 mb-8 text-white">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold mb-4">Want to Analyze YOUR Website?</h2>
+                <p class="text-xl mb-6 opacity-90">
+                    See how your site compares to {{ analysis.url.split('/')[2] }}
+                </p>
+                <a href="/?compare={{ analysis.url }}"
+                   class="inline-block bg-white text-purple-600 px-8 py-4 rounded-lg text-lg font-bold hover:bg-gray-100 transition transform hover:scale-105 shadow-lg">
+                    Analyze My Site Free →
+                </a>
+                <p class="text-sm mt-4 opacity-75">No credit card required • Takes 30 seconds</p>
+            </div>
+        </div>
+
+        <!-- Share Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Share This Analysis</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Twitter Share -->
+                <button onclick="shareTwitter()"
+                        class="share-button bg-blue-400 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                    <span>Twitter</span>
+                </button>
+
+                <!-- LinkedIn Share -->
+                <button onclick="shareLinkedIn()"
+                        class="share-button bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    <span>LinkedIn</span>
+                </button>
+
+                <!-- Copy Link -->
+                <button onclick="copyLink()"
+                        class="share-button bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    <span id="copy-btn-text">Copy Link</span>
+                </button>
+            </div>
+
+            <!-- Embed Code -->
+            <div class="mt-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Embed Badge on Your Site</label>
+                <div class="bg-gray-100 rounded-lg p-4">
+                    <code class="text-sm text-gray-800 break-all" id="embed-code">&lt;a href="{{ request.url }}"&gt;&lt;img src="{{ request.url.scheme }}://{{ request.url.netloc }}/badge/{{ analysis.id }}.svg" alt="Lead Magnet Score: {{ analysis.score }}/9" /&gt;&lt;/a&gt;</code>
+                </div>
+                <button onclick="copyEmbedCode()" class="mt-2 text-sm text-blue-600 hover:text-blue-700 font-semibold">
+                    Copy Embed Code
+                </button>
+            </div>
+        </div>
+
+        <!-- Email Capture Card (if not logged in) -->
+        <div class="bg-gray-100 rounded-2xl p-8 mb-8">
+            <div class="text-center max-w-md mx-auto">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Get Your Free Analysis</h3>
+                <p class="text-gray-600 mb-4">Enter your email to analyze your own website and track improvements</p>
+                <form action="/subscribe" method="post" class="space-y-3">
+                    <input type="hidden" name="source" value="report_page">
+                    <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                    <input type="email"
+                           name="email"
+                           placeholder="your@email.com"
+                           required
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <button type="submit"
+                            class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-blue-700 transition">
+                        Get My Free Analysis →
+                    </button>
+                </form>
+                <p class="text-xs text-gray-500 mt-2">✓ Free forever • ✓ No spam • ✓ Unsubscribe anytime</p>
+            </div>
+        </div>
+
+        <!-- Powered By Badge -->
+        <div class="text-center py-6">
+            <a href="/" class="inline-flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition">
+                <span class="text-sm">Powered by</span>
+                <span class="font-bold text-lg">Lead Magnet Analyzer</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const reportUrl = "{{ request.url }}";
+    const analysisUrl = "{{ analysis.url }}";
+    const score = {{ analysis.score }};
+    const breakdown = {{ analysis.breakdown | tojson }};
+
+    function shareTwitter() {
+        const text = encodeURIComponent(
+            `Just analyzed ${analysisUrl} with Lead Magnet Analyzer 🔍\n\n` +
+            `Lead Magnet Score: ${score}/9\n\n` +
+            `Email capture: ${breakdown['Email Capture'] > 0 ? '✓' : '✗'}\n` +
+            `Value offers: ${breakdown['Value Offers'] > 0 ? '✓' : '✗'}\n` +
+            `CTAs: ${breakdown['CTAs'] > 0 ? '✓' : '✗'}\n\n` +
+            `Analyze YOUR site free:`
+        );
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(reportUrl)}`, '_blank');
+
+        // Track share
+        fetch(`/api/track-share/${analysisUrl.split('/').pop()}`, { method: 'POST' });
+    }
+
+    function shareLinkedIn() {
+        const url = encodeURIComponent(reportUrl);
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+
+        // Track share
+        fetch(`/api/track-share/{{ analysis.id }}`, { method: 'POST' });
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(reportUrl).then(() => {
+            const btn = document.getElementById('copy-btn-text');
+            btn.textContent = 'Copied! ✓';
+            setTimeout(() => {
+                btn.textContent = 'Copy Link';
+            }, 2000);
+        });
+
+        // Track share
+        fetch(`/api/track-share/{{ analysis.id }}`, { method: 'POST' });
+    }
+
+    function copyEmbedCode() {
+        const code = document.getElementById('embed-code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('Embed code copied to clipboard!');
+        });
+    }
+</script>
+{% endblock %}
